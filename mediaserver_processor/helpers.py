@@ -25,11 +25,12 @@ class Config(dict):
         self['SOURCE_SET'] = [(100, 100), (250, 250)]
         self['COMPRESSION'] = 0
 
-        # What to do with unknown file types (not png, jpg or jpeg)
+        # What to do with unknown file types (not png, jpg or jpeg) or unprocessable images
         self['HARD_DELETE_UNKNOWN_TYPES'] = True
+        self['HARD_DELETE_UNPROCESSABLE'] = True
 
-        #
-        self[''] = False
+        # Safety feature to check for malicious files to be uploaded (Decompression Bombs)
+        self['MAX_IMAGE_PIXELS'] = 10000000
 
         def load():
             # TODO: Load a yaml file into the config class
@@ -76,12 +77,3 @@ class FileWatcher(DefaultDirWatcher):
             Directories should be ignored, thus the value False is always returned.
         """
         return False
-
-
-def add_id_to_img(path):
-    i = 1
-    while os.path.exists(path):
-        path = f'{path}-{i}'
-        i = i + 1
-
-    return path
