@@ -55,6 +55,16 @@ class MediaServerProcessor(object):
 
     @staticmethod
     async def resize_image(image_path, size):
+        """
+        Resizes the image with its current ratio intact. Will never upscale an image.
+
+        Parameters
+        ----------
+        image_path : str
+            The path pointing to the temp folder with the image to work with.
+        size : tuple
+            A tuple containing the desired size, in the form (width, height).
+        """
         image = Image.open(image_path)
         width, height = size
 
@@ -65,8 +75,26 @@ class MediaServerProcessor(object):
 
         return image
 
-    async def save_image(self, image, name, image_format):
-        image.save(f'{self.config["DIRECTORIES"]["OUT_DIR"]}/{name}_{image.width}.{image_format}')
+    async def save_image(self, image, name, image_format, optimize=True):
+        """
+        Saves the image to the output folder.
+
+        Parameters
+        ----------
+        image : PIL.Image
+            Image class that holds the image we are working with.
+        name : str
+            Name the image should be saved to.
+        image_format : str
+            The format we should save the image in.
+        optimize : bool
+            Whether or not we should try to optimize / compress the image. Defaults to True.
+
+        Returns
+        -------
+        None
+        """
+        image.save(f'{self.config["DIRECTORIES"]["OUT_DIR"]}/{name}_{image.width}.{image_format}', optimize=optimize)
 
     async def run(self):
         """
@@ -100,6 +128,19 @@ class MediaServerProcessor(object):
 
     @staticmethod
     async def _validate_image(file):
+        """
+        Basic validation to check if an image is actually an image.
+
+        Parameters
+        ----------
+        file : str
+            Path to the image file to load into the validation.
+
+        Returns
+        -------
+        bool
+            Whether or not the image is an image.
+        """
         # noinspection PyBroadException
         try:
             image = Image.open(file)
@@ -110,6 +151,19 @@ class MediaServerProcessor(object):
 
     @staticmethod
     async def _has_transparency(image):
+        """
+        Checks whether or not the image contains transparent pixels.
+
+        Parameters
+        ----------
+        image : PIL.Image
+            Loaded image file
+
+        Returns
+        -------
+        bool
+            Whether or not the image contains any transparency.
+        """
         if image.mode == 'P':
             transparent = image.info.get('transparency', -1)
             for _, index in image.getcolors():
@@ -123,7 +177,17 @@ class MediaServerProcessor(object):
 
     @staticmethod
     def _broadcast_welcome_message():
-        print('WELCOME')
+        """
+        Broadcasts a simple message to the terminal when starting main. All looks, no use.
+
+        Returns
+        -------
+        None
+        """
+        print('::::::::::::::::::::::::::::::::')
+        print('::   Mediaserver  Processor   ::')
+        print('::   Now watching queue dir   ::')
+        print('::::::::::::::::::::::::::::::::')
 
 
 if __name__ == '__main__':
