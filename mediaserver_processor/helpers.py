@@ -22,6 +22,10 @@ class Config(dict):
         }
 
         # Actions
+        self['ALLOWED_FILE_TYPES'] = ['jpg', 'jpeg', 'png']
+        self['DEFAULT_FILE_TYPE_TRANSPARENT'] = 'png'
+        self['DEFAULT_FILE_TYPE_NONTRANSPARENT'] = 'jpeg'
+        self['ALWAYS_SAVE_AS'] = ['webp']
         self['SOURCE_SET'] = [(100, 100), (250, 250)]
         self['COMPRESSION'] = 0
 
@@ -31,6 +35,7 @@ class Config(dict):
 
         # Safety feature to check for malicious files to be uploaded (Decompression Bombs)
         self['MAX_IMAGE_PIXELS'] = 10000000
+        self['IGNORE_COMPRESSION_BOMBS'] = True
 
         def load():
             # TODO: Load a yaml file into the config class

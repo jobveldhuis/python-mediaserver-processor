@@ -13,6 +13,7 @@ class MediaServerProcessor(object):
     """
     The application class that holds most of the logic of the image processor.
     """
+
     def __init__(self):
         self.config = Config()
         for directory in self.config['DIRECTORIES']:
@@ -20,23 +21,14 @@ class MediaServerProcessor(object):
                 os.makedirs(self.config['DIRECTORIES'][directory])
 
         Image.MAX_IMAGE_PIXELS = self.config['MAX_IMAGE_PIXELS']
-
-    @staticmethod
-    async def validate_image(file):
-        # noinspection PyBroadException
-        try:
-            image = Image.open(file)
-            image.verify()
-        except Exception:
-            return False
-        return True
+        self._broadcast_welcome_message()
 
     async def process_image(self, file):
         name, extension = file
         working_path = f'{self.config["DIRECTORIES"]["TMP_DIR"]}/{name}.{extension}'
 
         # If the image could not be validated or an error occurs, remove and skip this image
-        if not self.validate_image(working_path):
+        if not await self._validate_image(working_path):
             if self.config['HARD_DELETE_UNPROCESSABLE']:
                 os.remove(f'{self.config["DIRECTORIES"]["ORIGINALS"]}/{name}.{extension}')
                 os.remove(working_path)
@@ -44,15 +36,37 @@ class MediaServerProcessor(object):
 
         # Resize and save image in two formats: original format and webp
         for size in self.config['SOURCE_SET']:
-            image = Image.open(working_path)
-            image.thumbnail(size)
-            width, height = size
+            image = await self.resize_image(working_path, size)
 
-            image.save(f'{self.config["DIRECTORIES"]["OUT_DIR"]}/{name}_{width}x{height}.{extension}')
-            image.save(f'{self.config["DIRECTORIES"]["OUT_DIR"]}/{name}_{width}x{height}.webp')
+            if await self._has_transparency(image):
+                await self.save_image(image, name, self.config['DEFAULT_FILE_TYPE_TRANSPARENT'])
+
+            else:
+                image.mode = 'RGB'
+                await self.save_image(image, name, self.config['DEFAULT_FILE_TYPE_NONTRANSPARENT'])
+
+            for type_ in self.config['ALWAYS_SAVE_AS']:
+                if type_ is not self.config['DEFAULT_FILE_TYPE_NONTRANSPARENT'] \
+                        and type_ is not self.config['DEFAULT_FILE_TYPE_TRANSPARENT']:
+                    await self.save_image(image, name, type_)
 
         os.remove(working_path)
         return
+
+    @staticmethod
+    async def resize_image(image_path, size):
+        image = Image.open(image_path)
+        width, height = size
+
+        if not height:
+            image.thumbnail(width)
+        else:
+            image.thumbnail(size)
+
+        return image
+
+    async def save_image(self, image, name, image_format):
+        image.save(f'{self.config["DIRECTORIES"]["OUT_DIR"]}/{name}_{image.width}.{image_format}')
 
     async def run(self):
         """
@@ -72,7 +86,7 @@ class MediaServerProcessor(object):
                     new_path = f'{self.config["DIRECTORIES"]["QUEUE_DIR"]}/{file_name_}.{extension}'
                     file = (file_name_, extension)
 
-                    if extension in ('jpg', 'jpeg', 'png'):
+                    if extension in self.config['ALLOWED_FILE_TYPES']:
                         os.rename(f'{self.config["DIRECTORIES"]["QUEUE_DIR"]}/{file_name}', new_path)
                         shutil.copy2(new_path, self.config['DIRECTORIES']['ORIGINALS_DIR'])
                         shutil.move(new_path, self.config['DIRECTORIES']['TMP_DIR'])
@@ -83,6 +97,33 @@ class MediaServerProcessor(object):
                         os.remove(path)
                     else:
                         pass
+
+    @staticmethod
+    async def _validate_image(file):
+        # noinspection PyBroadException
+        try:
+            image = Image.open(file)
+            image.verify()
+        except Exception:
+            return False
+        return True
+
+    @staticmethod
+    async def _has_transparency(image):
+        if image.mode == 'P':
+            transparent = image.info.get('transparency', -1)
+            for _, index in image.getcolors():
+                if index == transparent:
+                    return True
+        elif image.mode == 'RGBA':
+            extrema = image.getextrema()
+            if extrema[3][0] < 255:
+                return True
+        return False
+
+    @staticmethod
+    def _broadcast_welcome_message():
+        print('WELCOME')
 
 
 if __name__ == '__main__':
