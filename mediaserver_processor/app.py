@@ -39,16 +39,16 @@ class MediaServerProcessor(object):
             image = await self.resize_image(working_path, size)
 
             if await self._has_transparency(image):
-                await self.save_image(image, name, self.config['DEFAULT_FILE_TYPE_TRANSPARENT'])
+                await self.save_image(image, name, self.config['FILE_TYPE_TRANSPARENT'], self.config['OPTIMIZE'])
 
             else:
                 image.mode = 'RGB'
-                await self.save_image(image, name, self.config['DEFAULT_FILE_TYPE_NONTRANSPARENT'])
+                await self.save_image(image, name, self.config['FILE_TYPE_NONTRANSPARENT'], self.config['OPTIMIZE'])
 
             for type_ in self.config['ALWAYS_SAVE_AS']:
-                if type_ is not self.config['DEFAULT_FILE_TYPE_NONTRANSPARENT'] \
-                        and type_ is not self.config['DEFAULT_FILE_TYPE_TRANSPARENT']:
-                    await self.save_image(image, name, type_)
+                if type_ is not self.config['FILE_TYPE_NONTRANSPARENT'] \
+                        and type_ is not self.config['FILE_TYPE_TRANSPARENT']:
+                    await self.save_image(image, name, type_, self.config['OPTIMIZE'])
 
         os.remove(working_path)
         return
@@ -125,6 +125,21 @@ class MediaServerProcessor(object):
                         os.remove(path)
                     else:
                         pass
+
+    def load_config(self, file):
+        """
+        Load the config from a yaml-file.
+
+        Parameters
+        ----------
+        file : str
+            Relative path to the yaml-file to load.
+
+        Returns
+        -------
+        None
+        """
+        self.config.load(file)
 
     @staticmethod
     async def _validate_image(file):

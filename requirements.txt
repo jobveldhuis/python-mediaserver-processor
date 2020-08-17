@@ -1,2 +1,4 @@
 watchgod~=0.6
 Pillow~=7.2.0
+setuptools~=49.6.0
+PyYAML~=5.3.1

@@ -1,14 +1,14 @@
 import re
 import os
 
-from watchgod import DefaultDirWatcher, Change
+import yaml
+from watchgod import DefaultDirWatcher
 
 
 class Config(dict):
     """
     Configuration class, behaves like a standard dict.
     """
-
     def __init__(self, *args, **kwargs):
         super(Config, self).__init__(*args, **kwargs)
 
@@ -23,11 +23,11 @@ class Config(dict):
 
         # Actions
         self['ALLOWED_FILE_TYPES'] = ['jpg', 'jpeg', 'png']
-        self['DEFAULT_FILE_TYPE_TRANSPARENT'] = 'png'
-        self['DEFAULT_FILE_TYPE_NONTRANSPARENT'] = 'jpeg'
+        self['FILE_TYPE_TRANSPARENT'] = 'png'
+        self['FILE_TYPE_NONTRANSPARENT'] = 'jpeg'
         self['ALWAYS_SAVE_AS'] = ['webp']
         self['SOURCE_SET'] = [(100, 100), (250, 250)]
-        self['COMPRESSION'] = 0
+        self['OPTIMIZE'] = True
 
         # What to do with unknown file types (not png, jpg or jpeg) or unprocessable images
         self['HARD_DELETE_UNKNOWN_TYPES'] = True
@@ -37,9 +37,22 @@ class Config(dict):
         self['MAX_IMAGE_PIXELS'] = 10000000
         self['IGNORE_COMPRESSION_BOMBS'] = True
 
-        def load():
-            # TODO: Load a yaml file into the config class
-            pass
+    def load(self, file):
+        """
+        Add key/value pairs to the configuration. Overwrite where necessary.
+
+        Parameters
+        ----------
+        file : str
+            Relative path to the yaml-file to load into the configuration.
+
+        Returns
+        -------
+        None
+        """
+        dictionary = load_yaml(file)
+        for item in dictionary:
+            self[item] = dictionary[item]
 
 
 class FileWatcher(DefaultDirWatcher):
@@ -82,3 +95,50 @@ class FileWatcher(DefaultDirWatcher):
             Directories should be ignored, thus the value False is always returned.
         """
         return False
+
+
+def is_yaml(path):
+    """
+    Checks whether the file at path is a yaml-file.
+
+    Parameters
+    ----------
+    path : str
+        The relative path to the file that should be checked.
+
+    Returns
+    -------
+    bool
+        Whether or not the specified file is a yaml-file.
+    """
+    if path.endswith('.yaml') or path.endswith('.yml'):
+        return True
+    return False
+
+
+def load_yaml(file):
+    """
+    Loads a yaml-file into a Python dictionary.
+
+    Parameters
+    ----------
+    file : str
+        Relative path to the file that should be loaded into a dict.
+
+    Raises
+    ------
+    ValueError
+        When specified file is not a yaml-file, and thus, cannot be loaded.
+
+    Returns
+    -------
+    items : dict
+        The dictionary that was retrieved from the Yaml-file.
+    """
+    if not is_yaml(file):
+        raise ValueError()
+
+    with open(file, 'r') as f:
+        items = yaml.load(f, Loader=yaml.FullLoader)
+
+    return items
