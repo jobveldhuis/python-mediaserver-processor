@@ -16,12 +16,12 @@ class MediaServerProcessor(object):
 
     def __init__(self):
         self.config = Config()
-        for directory in self.config['DIRECTORIES']:
-            if not os.path.isdir(self.config['DIRECTORIES'][directory]):
-                os.makedirs(self.config['DIRECTORIES'][directory])
+        self._validate_directories()
 
         Image.MAX_IMAGE_PIXELS = self.config['MAX_IMAGE_PIXELS']
-        self._broadcast_welcome_message()
+
+        if __name__ == '__main__':
+            self.broadcast_welcome_message()
 
     async def process_image(self, file):
         name, extension = file
@@ -36,11 +36,11 @@ class MediaServerProcessor(object):
 
         # Resize and save image in two formats: original format and webp
         for size in self.config['SOURCE_SET']:
+            print(size)
             image = await self.resize_image(working_path, size)
 
             if await self._has_transparency(image):
                 await self.save_image(image, name, self.config['FILE_TYPE_TRANSPARENT'], self.config['OPTIMIZE'])
-
             else:
                 image.mode = 'RGB'
                 await self.save_image(image, name, self.config['FILE_TYPE_NONTRANSPARENT'], self.config['OPTIMIZE'])
@@ -140,6 +140,12 @@ class MediaServerProcessor(object):
         None
         """
         self.config.load(file)
+        self._validate_directories()
+
+    def _validate_directories(self):
+        for directory in self.config['DIRECTORIES']:
+            if not os.path.isdir(self.config['DIRECTORIES'][directory]):
+                os.makedirs(self.config['DIRECTORIES'][directory])
 
     @staticmethod
     async def _validate_image(file):
@@ -191,7 +197,7 @@ class MediaServerProcessor(object):
         return False
 
     @staticmethod
-    def _broadcast_welcome_message():
+    def broadcast_welcome_message():
         """
         Broadcasts a simple message to the terminal when starting main. All looks, no use.
 
