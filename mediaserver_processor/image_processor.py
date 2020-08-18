@@ -26,6 +26,18 @@ class MediaServerProcessor(object):
             self.broadcast_welcome_message()
 
     async def process_image(self, file):
+        """
+        Processes a certain image that exists in the TMP_DIR.
+
+        Parameters
+        ----------
+        file : str
+            The name and extension of the file to parse.
+
+        Returns
+        -------
+        None
+        """
         name, extension = file
         working_path = f'{self.config["DIRECTORIES"]["TMP_DIR"]}/{name}.{extension}'
 
