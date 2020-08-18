@@ -5,6 +5,13 @@ from mediaserver_processor.image_processor import MediaServerProcessor
 
 
 def main():
+    """
+    Main entry point for the application
+
+    Returns
+    -------
+    None
+    """
     parser = create_parser()
     args = parser.parse_args()
     app = MediaServerProcessor()
@@ -24,6 +31,14 @@ def main():
 
 
 def create_parser():
+    """
+    Creates the argument parser that is necessary to parse optional arguments with CLI.
+
+    Returns
+    -------
+    parser : argparse.ArgumentParser
+        The parser that handles all argument parsing.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--config', help='config file to load from', type=str, metavar='')
     parser.add_argument('--disable-logging', help='if set, disables all logs', action='store_true')
