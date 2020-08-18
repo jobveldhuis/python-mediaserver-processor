@@ -38,6 +38,8 @@ class Config(dict):
         self['MAX_IMAGE_PIXELS'] = 10000000
         self['IGNORE_COMPRESSION_BOMBS'] = True
 
+        self['DISABLE_LOGGING'] = False
+
     def load(self, file):
         """
         Add key/value pairs to the configuration. Overwrite where necessary.
