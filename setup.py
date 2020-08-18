@@ -8,7 +8,7 @@ setuptools.setup(
     version='0.1.0',
     author='Job Veldhuis',
     author_email='job@baukefrederik.me',
-    description='Python script for mediaserver watching, resizing and distributing',
+    description='Python script for mediaserver watching, resizing and adding files to a source set.',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/jobveldhuis/python-mediaserver-processor',
