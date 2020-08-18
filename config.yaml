@@ -3,6 +3,7 @@ DIRECTORIES:
   OUT_DIR: ./out
   TMP_DIR: ./tmp
   ORIGINALS_DIR: ./originals
+  LOG_DIR: ./logs
 
 ALLOWED_FILE_TYPES:
   - jpg

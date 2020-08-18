@@ -18,7 +18,8 @@ class Config(dict):
             'QUEUE_DIR': './queue',
             'OUT_DIR': './out',
             'TMP_DIR': './tmp',
-            'ORIGINALS_DIR': './originals'
+            'ORIGINALS_DIR': './originals',
+            'LOG_DIR': './logs'
         }
 
         # Actions

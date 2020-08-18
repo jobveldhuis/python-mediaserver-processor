@@ -1,7 +1,9 @@
-from watchgod import Change, awatch
 import asyncio
 import shutil
 import os
+import logging
+
+from watchgod import Change, awatch
 from uuid import uuid4
 from PIL import Image
 
@@ -36,7 +38,6 @@ class MediaServerProcessor(object):
 
         # Resize and save image in two formats: original format and webp
         for size in self.config['SOURCE_SET']:
-            print(size)
             image = await self.resize_image(working_path, size)
 
             if await self._has_transparency(image):
