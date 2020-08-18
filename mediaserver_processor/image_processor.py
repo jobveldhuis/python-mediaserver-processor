@@ -197,8 +197,7 @@ class MediaServerProcessor(object):
                 return True
         return False
 
-    @staticmethod
-    def broadcast_welcome_message():
+    def broadcast_welcome_message(self):
         """
         Broadcasts a simple message to the terminal when starting main. All looks, no use.
 
@@ -209,6 +208,11 @@ class MediaServerProcessor(object):
         print('::::::::::::::::::::::::::::::::')
         print('::   Mediaserver  Processor   ::')
         print('::   Now watching queue dir   ::')
+
+        if self.config['DISABLE_LOGGING']:
+            print('::  ------------------------  ::')
+            print('::  All logging was disabled  ::')
+
         print('::::::::::::::::::::::::::::::::')
 
 

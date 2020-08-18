@@ -1,7 +1,7 @@
 import argparse
 import asyncio
 
-from mediaserver_processor.app import MediaServerProcessor
+from mediaserver_processor.image_processor import MediaServerProcessor
 
 
 def main():
@@ -12,23 +12,21 @@ def main():
     if args.config:
         app.load_config(args.config)
 
-    if args.command == 'run':
-        app.broadcast_welcome_message()
-        try:
-            loop = asyncio.get_event_loop()
-            loop.run_until_complete(app.run())
-        except KeyboardInterrupt:
-            print('\nStopped watching... Goodbye.')
+    if args.disable_logging:
+        app.config['DISABLE_LOGGING'] = True
 
-    elif args.command == 'single':
-        # TODO: Write logic for parsing a single image
-        pass
+    app.broadcast_welcome_message()
+    try:
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(app.run())
+    except KeyboardInterrupt:
+        print('\nStopped watching... Goodbye.')
 
 
 def create_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('command', help='command to run', choices=['run', 'single'])
     parser.add_argument('-c', '--config', help='config file to load from', type=str, metavar='')
+    parser.add_argument('--disable-logging', help='if set, disables all logs', action='store_true')
     return parser
 
 
