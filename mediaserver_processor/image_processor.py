@@ -79,12 +79,7 @@ class MediaServerProcessor(object):
             A tuple containing the desired size, in the form (width, height).
         """
         image = Image.open(image_path)
-        width, height = size
-
-        if not height:
-            image.thumbnail(width)
-        else:
-            image.thumbnail(size)
+        image.thumbnail(size)
 
         return image
 
