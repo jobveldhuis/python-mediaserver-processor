@@ -216,9 +216,10 @@ class MediaServerProcessor(object):
         print('::   Mediaserver  Processor   ::')
         print('::   Now watching queue dir   ::')
 
-        if self.config['DISABLE_LOGGING']:
+        if self.config['DISABLE_LOGGING'] or self.config['WEAK']:
             print('::  ------------------------  ::')
-            print('::  All logging was disabled  ::')
+            print('::  All logging was disabled  ::') if self.config['DISABLE_LOGGING'] else None
+            print('::     Ignoring all errors    ::') if self.config['WEAK'] else None
 
         print('::::::::::::::::::::::::::::::::')
 

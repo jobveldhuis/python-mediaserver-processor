@@ -39,6 +39,7 @@ class Config(dict):
         self['IGNORE_COMPRESSION_BOMBS'] = True
 
         self['DISABLE_LOGGING'] = False
+        self['WEAK'] = False
 
     def load(self, file):
         """
