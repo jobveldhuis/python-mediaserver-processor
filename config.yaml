@@ -1,18 +1,25 @@
+# Directories
 DIRECTORIES:
   QUEUE_DIR: ./queue
-  OUT_DIR: ./out
+  OUT_DIR: ./out2
   TMP_DIR: ./tmp
   ORIGINALS_DIR: ./originals
   LOG_DIR: ./logs
 
+# Possible file types
 ALLOWED_FILE_TYPES:
   - jpg
   - jpeg
   - png
 
+# Whether or not we should hash the file name before working with it
+HASH_FILE_NAMES: False
+
+# Standard file types for transparent and non-transparent images
 FILE_TYPE_TRANSPARENT: png
 FILE_TYPE_NONTRANSPARENT: jpeg
 
+# List of files that should always be saved
 ALWAYS_SAVE_AS:
   - webp
 
@@ -23,9 +30,11 @@ SOURCE_SET:
 
 HARD_DELETE_UNKNOWN_TYPES: True
 HARD_DELETE_UNPROCESSABLE: True
+HARD_KEEP_FILE_TYPE: False
+PROCESS_LEFTOVER_IMAGES: False
 
 MAX_IMAGE_PIXELS: 20000000
 IGNORE_COMPRESSION_BOMBS: False
 
 DISABLE_LOGGING: False
-WEAK: False
+LOG_FILE_NAME: mediaserver
