@@ -5,7 +5,7 @@ with open("README.md", "r") as doc:
 
 setuptools.setup(
     name='mediaserver_processor',
-    version='0.0.1',
+    version='0.0.3',
     author='Job Veldhuis',
     author_email='job@baukefrederik.me',
     description='Python script for mediaserver watching, resizing and adding files to a source set.',
