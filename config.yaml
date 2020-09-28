@@ -24,9 +24,9 @@ ALWAYS_SAVE_AS:
   - webp
 
 SOURCE_SET:
-  - (200, 200)
-  - (500, 500)
-  - (1000, 1000)
+  - !!python/tuple [200, 200]
+  - !!python/tuple [500, 500]
+  - !!python/tuple [1000, 1000]
 
 HARD_DELETE_UNKNOWN_TYPES: True
 HARD_DELETE_UNPROCESSABLE: True
