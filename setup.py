@@ -5,7 +5,7 @@ with open("README.md", "r") as doc:
 
 setuptools.setup(
     name='mediaserver_processor',
-    version='0.1.0',
+    version='0.0.1',
     author='Job Veldhuis',
     author_email='job@baukefrederik.me',
     description='Python script for mediaserver watching, resizing and adding files to a source set.',
@@ -24,6 +24,7 @@ setuptools.setup(
     install_requires=[
         'watchgod',
         'pillow',
+        'pyYaml'
     ],
     entry_points='''
     [console_scripts]
