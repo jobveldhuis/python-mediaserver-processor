@@ -16,9 +16,14 @@ class MediaServerProcessor(object):
     The application class that holds most of the logic of the image processor.
     """
 
-    def __init__(self):
+    def __init__(self, config=None):
         self.config = Config()
-        self._validate_directories()
+
+        if config:
+            self.load_config(config)
+        else:
+            self._validate_directories()
+
         self.logger = self.configure_logging()
 
         if self.config['DISABLE_LOGGING']:
