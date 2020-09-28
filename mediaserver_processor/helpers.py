@@ -3,6 +3,7 @@ import os
 
 import yaml
 from watchgod import DefaultDirWatcher
+import logging
 
 
 class Config(dict):
@@ -29,8 +30,11 @@ class Config(dict):
         self['ALWAYS_SAVE_AS'] = ['webp']
         self['SOURCE_SET'] = [(100, 100), (250, 250)]
         self['OPTIMIZE'] = True
+        self['HASH_FILE_NAMES'] = False
+        self['PROCESS_LEFTOVER_IMAGES'] = True
 
         # What to do with unknown file types (not png, jpg or jpeg) or unprocessable images
+        self['HARD_KEEP_FILE_TYPE'] = True
         self['HARD_DELETE_UNKNOWN_TYPES'] = True
         self['HARD_DELETE_UNPROCESSABLE'] = True
 
@@ -38,8 +42,10 @@ class Config(dict):
         self['MAX_IMAGE_PIXELS'] = 10000000
         self['IGNORE_COMPRESSION_BOMBS'] = True
 
+        # Settings for logging
         self['DISABLE_LOGGING'] = False
-        self['WEAK'] = False
+        self['LOG_LEVEL'] = logging.INFO
+        self['LOG_FILE_NAME'] = 'mediaserver'
 
     def load(self, file):
         """
