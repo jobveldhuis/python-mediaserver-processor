@@ -63,17 +63,18 @@ class MediaServerProcessor(object):
                 self.logger.warning(f'Image "{name}.{extension}" could not be verified and was removed from queue.')
                 return
 
-        # Resize and save image in two formats: original format and webp
         for size in self.config['SOURCE_SET']:
             image = await self.resize_image(working_path, size)
 
             if self.config['HARD_KEEP_FILE_TYPE']:
+                # Resize and save image in original format and specified always-save as formats
                 await self.save_image(image, name, extension, size=size[0])
 
                 for type_ in self.config['ALWAYS_SAVE_AS']:
                     if type_ is not extension:
                         await self.save_image(image, name, type_, size=size[0])
             else:
+                # Resize and save image in configurated types for transparent/non-transparent files and always-save as
                 if await self._has_transparency(image):
                     await self.save_image(image, name, self.config['FILE_TYPE_TRANSPARENT'], size=size[0])
 
@@ -94,7 +95,7 @@ class MediaServerProcessor(object):
     @staticmethod
     async def resize_image(image_path, size):
         """
-        Resizes the image with its current ratio intact. Will never upscale an image.
+        Resize the image with its current ratio intact. Will never upscale an image.
 
         Parameters
         ----------
