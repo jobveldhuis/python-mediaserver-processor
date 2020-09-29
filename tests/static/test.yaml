@@ -1,0 +1,17 @@
+test_bool_true: True
+test_bool_false: False
+
+test_string: Hello
+test_string_quotes: "World"
+
+test_tuple: !!python/tuple [120, 120]
+test_invalid_tuple: (120, 120)
+
+test_list:
+  - Monty
+  - Python
+  - and the
+  - Holy
+  - Grail
+
+test_invalid_list: The Knights who say Nee
