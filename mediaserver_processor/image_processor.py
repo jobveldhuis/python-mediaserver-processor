@@ -53,14 +53,15 @@ class MediaServerProcessor(object):
         None
         """
         name, extension = file
-        working_path = f'{self.config["DIRECTORIES"]["TMP_DIR"]}/{name}.{extension}'
+        working_path = '{0}/{1}.{2}'.format(self.config["DIRECTORIES"]["TMP_DIR"], name, extension)
 
         # If the image could not be validated or an error occurs, remove and skip this image
         if not await self._validate_image(working_path):
             if self.config['HARD_DELETE_UNPROCESSABLE']:
-                os.remove(f'{self.config["DIRECTORIES"]["ORIGINALS_DIR"]}/{name}.{extension}')
+                os.remove('{0}/{1}.{2}'.format(self.config["DIRECTORIES"]["ORIGINALS_DIR"], name, extension))
                 os.remove(working_path)
-                self.logger.warning(f'Image "{name}.{extension}" could not be verified and was removed from queue.')
+                self.logger.warning('Image "{0}.{1}" could not be verified and was removed from queue.'.format(
+                    name, extension))
                 return
 
         for size in self.config['SOURCE_SET']:
@@ -87,7 +88,7 @@ class MediaServerProcessor(object):
                             and type_ is not self.config['FILE_TYPE_TRANSPARENT']:
                         await self.save_image(image, name, type_, size=size[0])
 
-            self.logger.info(f'Saved "{name}.{extension}", size: {size}')
+            self.logger.info('Saved "{0}.{1}", size: {2}'.format(name, extension, size))
 
         os.remove(working_path)
         return
@@ -143,7 +144,8 @@ class MediaServerProcessor(object):
         if not optimize:
             optimize = self.config['OPTIMIZE']
 
-        image.save(f'{self.config["DIRECTORIES"]["OUT_DIR"]}/{name}_{width}.{image_format}', optimize=optimize)
+        image.save('{0}/{1}_{2}.{3}'.format(self.config["DIRECTORIES"]["OUT_DIR"], name, width, image_format),
+                   optimize=optimize)
 
     async def run(self):
         """
@@ -166,11 +168,11 @@ class MediaServerProcessor(object):
                     else:
                         new_file_name = os.path.basename(path).split('.')[0]
 
-                    new_path = f'{self.config["DIRECTORIES"]["QUEUE_DIR"]}/{new_file_name}.{extension}'
+                    new_path = '{0}/{1}.{2}'.format(self.config["DIRECTORIES"]["QUEUE_DIR"], new_file_name, extension)
                     file = (new_file_name, extension)
 
                     if extension in self.config['ALLOWED_FILE_TYPES']:
-                        os.rename(f'{self.config["DIRECTORIES"]["QUEUE_DIR"]}/{file_name}', new_path)
+                        os.rename('{0}/{1}'.format(self.config["DIRECTORIES"]["QUEUE_DIR"], file_name), new_path)
                         shutil.copy2(new_path, self.config['DIRECTORIES']['ORIGINALS_DIR'])
                         shutil.move(new_path, self.config['DIRECTORIES']['TMP_DIR'])
 
@@ -221,7 +223,7 @@ class MediaServerProcessor(object):
             image = Image.open(file)
             image.verify()
         except Exception:
-            self.logger.exception(f'Exception occurred when verifying image "{file}"')
+            self.logger.exception('Exception occurred when verifying image "{0}"'.format(file))
             return False
         return True
 
@@ -281,7 +283,8 @@ class MediaServerProcessor(object):
         logger = logging.getLogger('media_server_processor')
         logger.setLevel(logging.INFO)
 
-        file_handler = logging.FileHandler(f'{self.config["DIRECTORIES"]["LOG_DIR"]}/mediaserver.log')
+        file_handler = logging.FileHandler('{0}/{1}.log'.format(
+            self.config["DIRECTORIES"]["LOG_DIR"], self.config["LOG_FILE_NAME"]))
         file_handler.setLevel(logging.INFO)
 
         stream_handler = logging.StreamHandler()
