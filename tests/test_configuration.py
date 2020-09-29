@@ -44,3 +44,7 @@ class TestConfigurationMethods(unittest.TestCase):
     def test_nonexistent_key(self):
         with self.assertRaises(KeyError):
             value = self.app.config['key_that_does_not_exist']
+
+    def test_non_yaml_load_config(self):
+        with self.assertRaises(ValueError):
+            self.app.config.load(f'{self.directory}/static/not_yaml.txt')
