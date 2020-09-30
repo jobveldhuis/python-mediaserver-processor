@@ -148,7 +148,10 @@ class MediaServerProcessor(object):
         image.save(output_path, optimize=optimize)
 
         if self.config['OVERWRITE_FILE_PERMISSIONS']:
-            permission = int(self.config['FILE_PERMISSIONS'], 8)
+            if isinstance(self.config['FILE_PERMISSIONS'], int):
+                permission = oct(self.config['FILE_PERMISSIONS'])
+            else:
+                permission = int(self.config['FILE_PERMISSIONS'], 8)
             os.chmod(output_path, permission)
 
     async def run(self):
