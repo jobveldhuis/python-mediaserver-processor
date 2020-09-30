@@ -22,7 +22,7 @@ def main():
     if args.disable_logging:
         app.config['DISABLE_LOGGING'] = True
 
-    if args.weak:
+    if args.keep_alive:
         app.broadcast_welcome_message()
         while True:
             try:
@@ -56,7 +56,7 @@ def create_parser():
     """
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--config', help='config file to load from', type=str, metavar='')
-    parser.add_argument('--weak', help='always restart program on error', action='store_true')
+    parser.add_argument('--keep-alive', help='always restart program on error', action='store_true')
     parser.add_argument('--disable-logging', help='if set, disables all logs', action='store_true')
     return parser
 
