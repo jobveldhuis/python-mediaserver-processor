@@ -38,6 +38,10 @@ class Config(dict):
         self['HARD_DELETE_UNKNOWN_TYPES'] = True
         self['HARD_DELETE_UNPROCESSABLE'] = True
 
+        # Settings for file permissions
+        self['OVERWRITE_FILE_PERMISSIONS'] = False
+        self['FILE_PERMISSIONS'] = None
+
         # Safety feature to check for malicious files to be uploaded (Decompression Bombs)
         self['MAX_IMAGE_PIXELS'] = 10000000
         self['IGNORE_COMPRESSION_BOMBS'] = True

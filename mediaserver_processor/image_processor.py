@@ -144,8 +144,12 @@ class MediaServerProcessor(object):
         if not optimize:
             optimize = self.config['OPTIMIZE']
 
-        image.save('{0}/{1}_{2}.{3}'.format(self.config["DIRECTORIES"]["OUT_DIR"], name, width, image_format),
-                   optimize=optimize)
+        output_path = '{0}/{1}_{2}.{3}'.format(self.config['DIRECTORIES']['OUT_DIR'], name, width, image_format)
+        image.save(output_path, optimize=optimize)
+
+        if self.config['OVERWRITE_FILE_PERMISSIONS']:
+            permission = int(self.config['FILE_PERMISSIONS'], 8)
+            os.chmod(output_path, permission)
 
     async def run(self):
         """

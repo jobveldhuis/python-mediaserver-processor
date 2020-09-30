@@ -23,18 +23,26 @@ FILE_TYPE_NONTRANSPARENT: jpeg
 ALWAYS_SAVE_AS:
   - webp
 
+# File size tuples
 SOURCE_SET:
   - !!python/tuple [200, 200]
   - !!python/tuple [500, 500]
   - !!python/tuple [1000, 1000]
 
+# Actions
 HARD_DELETE_UNKNOWN_TYPES: True
 HARD_DELETE_UNPROCESSABLE: True
 HARD_KEEP_FILE_TYPE: False
 PROCESS_LEFTOVER_IMAGES: False
 
+# Permissions, use octal file permission notation
+OVERWRITE_FILE_PERMISSIONS: True
+FILE_PERMISSIONS: 664
+
+# Image pixel size settings
 MAX_IMAGE_PIXELS: 20000000
 IGNORE_COMPRESSION_BOMBS: False
 
+# Logging
 DISABLE_LOGGING: False
 LOG_FILE_NAME: mediaserver
