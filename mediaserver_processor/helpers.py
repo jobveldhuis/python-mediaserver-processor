@@ -125,9 +125,7 @@ def is_yaml(path):
     bool
         Whether or not the specified file is a yaml-file.
     """
-    if path.endswith('.yaml') or path.endswith('.yml'):
-        return True
-    return False
+    return path.endswith('.yaml') or path.endswith('.yml')
 
 
 def load_yaml(file):
